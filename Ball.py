@@ -36,6 +36,7 @@ class Ball():
         ball = arbiter.shapes[0].obj
         bumper = arbiter.shapes[1].obj
         if arbiter.is_first_contact:
+            points += 100
             bumper.bump()
         return True
         
