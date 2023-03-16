@@ -51,6 +51,8 @@ points = 0
 live = Hud("lives ",[0,0])
 point = Hud("points ", [620,0])
 
+
+
 def game():
     ballcountMAX = 1
     ballcount = 0 
@@ -68,11 +70,7 @@ def game():
                     if event.key == pygame.K_b:
                         if ballcount < ballcountMAX:
                             ballcount += 1
-                            if random.randint(0,1) == 0:    #left
-                                x = random.randint(200, 350)
-                            else:
-                                x = random.randint(450, 600)
-                            ball = Ball(space, [x, 350]) 
+                            ball = Ball(space, [835, 850]) 
                             objects.append(ball)
                         else:
                             print("Cannot add another ball")
@@ -101,7 +99,7 @@ def game():
         for o in objects:
             screen.blit(o.image, o.rect)
         
-        # ~ space.debug_draw(draw_options)
+        space.debug_draw(draw_options)
         
         pygame.display.update()
         clock.tick(FPS)
