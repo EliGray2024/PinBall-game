@@ -70,7 +70,11 @@ def game():
                     if event.key == pygame.K_b:
                         if ballcount < ballcountMAX:
                             ballcount += 1
-                            ball = Ball(space, [835, 850]) 
+                            if random.randint(0,1) == 0:    
+                                x = random.randint(200, 350)
+                            else:
+                                x = random.randint(450, 600)
+                            ball = Ball(space, [x, 350]) 
                             objects.append(ball)
                         else:
                             print("Cannot add another ball")
