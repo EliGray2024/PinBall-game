@@ -46,7 +46,7 @@ bumperCenters = [(250, 200), (400, 300),(550, 200)]
 for center in bumperCenters:
     objects.append(Bumper(space, center))
     
-points = 0
+
 
 live = Hud("lives ",[0,0])
 point = Hud("points ", [620,0])
@@ -57,6 +57,7 @@ def game():
     ballcountMAX = 1
     ballcount = 0 
     lives = 3
+    points = 0
     while True:
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
@@ -81,7 +82,10 @@ def game():
         
         
         for o in objects:
-            o.update()
+            if o.kind == "bumper":
+                points += o.update()
+            else:
+                o.update()
             if o.rect.top > size[1]:
                 ballcount -= 1
                 lives -=1
@@ -90,6 +94,7 @@ def game():
                 objects.remove(o)
                 
         live.update(lives) 
+        point.update(points) 
         if lives == 0:
             pygame.quit()
         
@@ -103,7 +108,7 @@ def game():
         for o in objects:
             screen.blit(o.image, o.rect)
         
-        space.debug_draw(draw_options)
+        # ~ space.debug_draw(draw_options)
         
         pygame.display.update()
         clock.tick(FPS)

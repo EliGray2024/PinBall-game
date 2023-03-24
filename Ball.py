@@ -3,6 +3,7 @@ from pymunk import Vec2d
 
 class Ball():
     def __init__(self, space, pos, radius = 30):
+        self.kind = "ball"
         self.radius = radius
         self.image = pygame.image.load("images/ball.png")
         self.image = pygame.transform.scale(self.image, (self.radius*2, self.radius*2))

@@ -3,6 +3,7 @@ from pymunk import Vec2d
 
 class Flipper():
     def __init__ (self, side, pos, angle, space):
+        self.kind = "flipper"
         fp = [[0, 7], [-7, 20], [0, 33], # Tip
               [130, 40] , [142, 35], [148, 20], [142, 5], [130, 0]]
         for f in fp:

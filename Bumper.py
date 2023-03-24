@@ -3,6 +3,7 @@ from pymunk import Vec2d
 
 class Bumper ():
     def __init__(self, space, pos, radius =10):
+        self.kind = "bumper"
         self.radius = radius
         self.pos = pos
         self.imageRest = pygame.transform.scale(pygame.image.load("images/bumper.png"), (self.radius*2, self.radius*2))
@@ -24,6 +25,9 @@ class Bumper ():
         self.hitTimer = 0
         self.hitTimerMax = 3
         
+        self.didHit = False
+        self.value = 100
+        
     def update(self):
         self.body.pos = self.pos
         self.body.velocity = 0, 0
@@ -31,14 +35,19 @@ class Bumper ():
         if self.hitTimer > 0:
             if self.hitTimer <= self.hitTimerMax:
                 self.hitTimer += 1
+                if self.didHit:
+                    self.didHit = False
+                    return self.value
             else:
                 self.hitTimer = 0
                 self.image = self.imageRest
                 self.rect = self.image.get_rect(center = self.body.pos)
+        return 0 
 
     def bump(self):
         self.sound.play()
         self.image = self.imageHit
         self.rect = self.image.get_rect(center = self.body.pos)
         self.hitTimer = 1
+        self.didHit = True
         
