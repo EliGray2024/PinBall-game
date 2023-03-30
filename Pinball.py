@@ -2,6 +2,7 @@ import pygame, pymunk, math, pymunk.pygame_util, random
 from pymunk import Vec2d 
 from Ball import*
 from Hud import*
+from Hub import*
 from Map import*
 from Bumper import*
 from Flipper import*
@@ -52,8 +53,8 @@ live = Hud("lives ",[0,0])
 point = Hud("points ", [620,0])
 
 
-
 def game():
+    main_menu()
     ballcountMAX = 1
     ballcount = 0 
     lives = 3
@@ -79,8 +80,11 @@ def game():
                             objects.append(ball)
                         else:
                             print("Cannot add another ball")
-        
-        
+                
+                
+                
+
+             
         for o in objects:
             if o.kind == "bumper":
                 points += o.update()
@@ -96,9 +100,7 @@ def game():
         live.update(lives) 
         point.update(points) 
         if lives == 0:
-            pygame.quit()
-        
-        
+            menu_state = "end"
         screen.fill((255,255,255))
         screen.blit(table.image, table.rect)
         screen.blit(live.image, live.rect)
@@ -107,8 +109,6 @@ def game():
             pygame.draw.line(screen, ("black"), line.a, line.b, 5)
         for o in objects:
             screen.blit(o.image, o.rect)
-        
-        # ~ space.debug_draw(draw_options)
         
         pygame.display.update()
         clock.tick(FPS)
