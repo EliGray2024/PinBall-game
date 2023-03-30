@@ -6,6 +6,8 @@ from Hub import*
 from Map import*
 from Bumper import*
 from Flipper import*
+#spoon
+from Launcher import*
 
 
 pygame.mixer.pre_init(44100, -16, 1, 512)
@@ -15,6 +17,9 @@ Ball.collision_type = 1
 Map.collision_type = 2
 Flipper.collision_type = 3
 Bumper.collision_type = 4
+
+#spoon
+Launcher.collision_type = 5
 
 size = (930,1000)
 screen = pygame.display.set_mode(size)
@@ -47,7 +52,9 @@ bumperCenters = [(250, 200), (400, 300),(550, 200)]
 for center in bumperCenters:
     objects.append(Bumper(space, center))
     
-
+#spoon
+launcher = Launcher(space, [834, 600])
+objects.append(launcher)
 
 live = Hud("lives ",[0,0])
 point = Hud("points ", [620,0])
@@ -68,15 +75,17 @@ def game():
                     rightFlipper.flip()
                 if event.key == pygame.K_LEFT:
                     leftFlipper.flip()
+                if event.key == pygame.K_SPACE:
+                    launcher.go()
                 if event.type == pygame.KEYDOWN:
                     if event.key == pygame.K_b:
                         if ballcount < ballcountMAX:
                             ballcount += 1
-                            if random.randint(0,1) == 0:    
-                                x = random.randint(200, 350)
-                            else:
-                                x = random.randint(450, 600)
-                            ball = Ball(space, [x, 350]) 
+                            # ~ if random.randint(0,1) == 0:    
+                                # ~ x = random.randint(200, 350)
+                            # ~ else:
+                                # ~ x = random.randint(450, 600)
+                            ball = Ball(space, [834, 350]) 
                             objects.append(ball)
                         else:
                             print("Cannot add another ball")
@@ -109,6 +118,8 @@ def game():
             pygame.draw.line(screen, ("black"), line.a, line.b, 5)
         for o in objects:
             screen.blit(o.image, o.rect)
+        
+        #space.debug_draw(draw_options)
         
         pygame.display.update()
         clock.tick(FPS)
