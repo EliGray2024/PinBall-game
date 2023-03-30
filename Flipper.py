@@ -11,7 +11,7 @@ class Flipper():
             f[1]-=20
         self.mass = 100
         self.moment = pymunk.moment_for_poly(self.mass, fp)
-        self.group = 1
+        #self.group = 1
         self.elasticity = 0.4
     
         self.body = pymunk.Body(self.mass, self.moment)
