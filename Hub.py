@@ -1,8 +1,7 @@
-# ~ import pygame, pymunk, math, pymunk.pygame_util
-# ~ from pymunk import Vec2d 
-# ~ from button import*
+import pygame, pymunk, math, pymunk.pygame_util
+from pymunk import Vec2d 
 import pygame, sys
-from button import Button
+from Button import Button
 
 pygame.init()
 
