@@ -6,7 +6,6 @@ from Hub import*
 from Map import*
 from Bumper import*
 from Flipper import*
-#spoon
 from Launcher import*
 
 
@@ -18,7 +17,6 @@ Map.collision_type = 2
 Flipper.collision_type = 3
 Bumper.collision_type = 4
 
-#spoon
 Launcher.collision_type = 5
 
 size = (930,1000)
@@ -52,7 +50,7 @@ bumperCenters = [(250, 200), (400, 300),(550, 200)]
 for center in bumperCenters:
     objects.append(Bumper(space, center))
     
-#spoon
+
 launcher = Launcher(space, [834, 600])
 objects.append(launcher)
 
@@ -61,7 +59,6 @@ point = Hud("points ", [620,0])
 
 
 def game():
-    main_menu()
     ballcountMAX = 1
     ballcount = 0 
     lives = 3
@@ -124,6 +121,6 @@ def game():
         pygame.display.update()
         clock.tick(FPS)
         space.step(1/FPS)
-
 game()
+
 pygame.quit()
