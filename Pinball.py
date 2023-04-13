@@ -20,7 +20,6 @@ Map.collision_type = 2
 Flipper.collision_type = 3
 Bumper.collision_type = 4
 
-#spoon
 Launcher.collision_type = 5
 
 size = (930,1000)
@@ -54,30 +53,84 @@ bumperCenters = [(250, 200), (400, 300),(550, 200)]
 for center in bumperCenters:
     objects.append(Bumper(space, center))
     
-#spoon
 launcher = Launcher(space, [834, 600])
 objects.append(launcher)
 
 live = Hud("lives ",[0,0])
-point = Hud("points ", [620,0])
+point = Hud("points ", [670,0])
 
+points = 0
+lives = 3
+ballcountMAX = 1
+ballcount = 0
 
-def game():
-    ballcountMAX = 1
-    ballcount = 0 
-    lives = 3
-    points = 0
-    while True:
+view = "main menu" 
+viewChanged = True;
+
+while True:
+    if view == "main menu" and viewChanged:
+        BG = pygame.image.load("images/Background.png")
+
+        MENU_TEXT = pygame.font.Font("images/font.ttf", 100).render("PINBALL", True, "#d7fcd4")
+        MENU_RECT = MENU_TEXT.get_rect(center=(465, 100))
+    
+        
+        PLAY_BUTTON = Button(image=pygame.image.load("images/Play Rect.png"), pos=(465, 250), 
+                            text_input="PLAY", font=pygame.font.Font("images/font.ttf", 75), base_color="#d7fcd4", hovering_color="White", screen = screen)
+        OPTIONS_BUTTON = Button(image=pygame.image.load("images/Options Rect.png"), pos=(465, 400), 
+                            text_input="OPTIONS", font=pygame.font.Font("images/font.ttf", 75), base_color="#d7fcd4", hovering_color="White", screen = screen)
+        QUIT_BUTTON = Button(image=pygame.image.load("images/Quit Rect.png"), pos=(465, 550), 
+                            text_input="QUIT", font=pygame.font.Font("images/font.ttf", 75), base_color="#d7fcd4", hovering_color="White", screen = screen)
+        screen.blit(BG, (0, 0))
+        
+        points = 0
+        lives = 3
+        ballcount = 0
+        viewChanged = False
+    while view == "main menu":
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 pygame.quit()
                 sys.exit()
-                return
+            if event.type == pygame.MOUSEMOTION:
+                for button in [PLAY_BUTTON, OPTIONS_BUTTON, QUIT_BUTTON]:
+                    button.changeColor(event.pos)
+                    button.update()
+            if event.type == pygame.MOUSEBUTTONDOWN:
+                if PLAY_BUTTON.checkForInput(event.pos):
+                    view = "game"
+                    
+                    for o in objects:
+                        if o.kind == "ball":
+                            space.remove(o.body, o.shape)
+                            objects.remove(o)
+                            print("kill ball")
+                        ballcount = 0
+                        
+                    viewChanged = True
+                if OPTIONS_BUTTON.checkForInput(event.pos):
+                    pass
+                if QUIT_BUTTON.checkForInput(event.pos):
+                    pygame.quit()
+                    sys.exit()
+        
+        screen.blit(MENU_TEXT, MENU_RECT)
+        pygame.display.update()
+    
+    if view == "game" and viewChanged:
+        viewChanged = False
+    while view == "game":
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                pygame.quit()
+                sys.exit()
+                
             if event.type == pygame.KEYDOWN:
                 if event.key == pygame.K_RIGHT:
                     rightFlipper.flip()
                 if event.key == pygame.K_ESCAPE:
-                    paused()
+                    view = "paused"
+                    viewChanged = True
                 if event.key == pygame.K_LEFT:
                     leftFlipper.flip()
                 if event.key == pygame.K_SPACE:
@@ -86,19 +139,12 @@ def game():
                     if event.key == pygame.K_b:
                         if ballcount < ballcountMAX:
                             ballcount += 1
-                            # ~ if random.randint(0,1) == 0:    
-                                # ~ x = random.randint(200, 350)
-                            # ~ else:
-                                # ~ x = random.randint(450, 600)
-                            ball = Ball(space, [834, 350]) 
+                            x = 834
+                            ball = Ball(space, [x, 350]) 
                             objects.append(ball)
                         else:
                             print("Cannot add another ball")
                 
-                
-                
-
-             
         for o in objects:
             if o.kind == "bumper":
                 points += o.update()
@@ -114,7 +160,8 @@ def game():
         live.update(lives) 
         point.update(points) 
         if lives == 0:
-            menu_state = "end"
+            view = "loss"
+            viewChanged = True
         screen.fill((255,255,255))
         screen.blit(table.image, table.rect)
         screen.blit(live.image, live.rect)
@@ -129,70 +176,91 @@ def game():
         pygame.display.update()
         clock.tick(FPS)
         space.step(1/FPS)
+    
+    if view == "paused" and viewChanged:
+        MENU_MOUSE_POS = pygame.mouse.get_pos()
 
-def main_menu():
-    BG = pygame.image.load("images/Background.png")
+        TextSurf = pygame.font.Font("images/font.ttf", 115).render("Paused", True, "#d7fcd4")
+        TextRect = TextSurf.get_rect(center=(465, 100))
 
-    MENU_TEXT = pygame.font.Font("images/font.ttf", 100).render("MAIN MENU", True, "#b68f40")
-    MENU_RECT = MENU_TEXT.get_rect(center=(465, 100))
-
-    PLAY_BUTTON = Button(image=pygame.image.load("images/Play Rect.png"), pos=(465, 250), 
-                        text_input="PLAY", font=pygame.font.Font("images/font.ttf", 75), base_color="#d7fcd4", hovering_color="White")
-    OPTIONS_BUTTON = Button(image=pygame.image.load("images/Options Rect.png"), pos=(465, 400), 
-                        text_input="OPTIONS", font=pygame.font.Font("images/font.ttf", 75), base_color="#d7fcd4", hovering_color="White")
-    QUIT_BUTTON = Button(image=pygame.image.load("images/Quit Rect.png"), pos=(465, 550), 
-                        text_input="QUIT", font=pygame.font.Font("images/font.ttf", 75), base_color="#d7fcd4", hovering_color="White")
-    screen.blit(BG, (0, 0))
-    while True:
+        screen.blit(TextSurf, TextRect)
         
+        PLAY_BUTTON = Button(image=pygame.image.load("images/Continue Rect.png"), pos=(465, 250), 
+                        text_input="CONTINUE", font=pygame.font.Font("images/font.ttf", 75), base_color="#d7fcd4", hovering_color="White", screen = screen)
+        OPTIONS_BUTTON = Button(image=pygame.image.load("images/Continue Rect.png"), pos=(465, 400), 
+                            text_input="MAIN MENU", font=pygame.font.Font("images/font.ttf", 75), base_color="#d7fcd4", hovering_color="White", screen = screen)
+        QUIT_BUTTON = Button(image=pygame.image.load("images/Quit Rect.png"), pos=(465, 550), 
+                        text_input="QUIT", font=pygame.font.Font("images/font.ttf", 75), base_color="#d7fcd4", hovering_color="White", screen = screen)
+        
+        viewChanged = False
+    while view == "paused":
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 pygame.quit()
                 sys.exit()
+            if event.type == pygame.KEYDOWN:
+                if event.key == pygame.K_BACKSPACE or event.key == pygame.K_ESCAPE:
+                        view = "game"
+                        viewChanged = True
             if event.type == pygame.MOUSEMOTION:
                 for button in [PLAY_BUTTON, OPTIONS_BUTTON, QUIT_BUTTON]:
                     button.changeColor(event.pos)
-                    button.update(screen)
+                    button.update()
             if event.type == pygame.MOUSEBUTTONDOWN:
                 if PLAY_BUTTON.checkForInput(event.pos):
-                    game()
+                    view = "game"
+                    viewChanged = True
                 if OPTIONS_BUTTON.checkForInput(event.pos):
-                    options()
+                    view = "main menu"
+                    viewChanged = True
                 if QUIT_BUTTON.checkForInput(event.pos):
                     pygame.quit()
                     sys.exit()
-        
-        screen.blit(MENU_TEXT, MENU_RECT)
-        pygame.display.update()
-        
 
-def paused():
-    
-    TextSurf = pygame.font.Font("images/font.ttf", 115).render("Paused", True, "#b68f40")
-    TextRect = TextSurf.get_rect(center=(465, 100))
-
-    screen.blit(TextSurf, TextRect)
-    
-
-    while paused:
-        for event in pygame.event.get():
-
-            if event.type == pygame.QUIT:
-                pygame.quit()
-                quit()
-                
-        #gameDisplay.fill(white)
-        
-
-        PLAY_BUTTON = Button(image=pygame.image.load("images/Play Rect.png"), pos=(465, 250), 
-                        text_input="Continue", font=pygame.font.Font("images/font.ttf", 75), base_color="#d7fcd4", hovering_color="White")
-        QUIT_BUTTON = Button(image=pygame.image.load("images/Quit Rect.png"), pos=(465, 550), 
-                        text_input="QUIT", font=pygame.font.Font("images/font.ttf", 75), base_color="#d7fcd4", hovering_color="White")
-
-        pygame.display.update()
         clock.tick(15) 
+        pygame.display.update()
+
+    if view == "loss" and viewChanged:
+        BG = pygame.image.load("images/Background2.png")
+
+        MENU_TEXT = pygame.font.Font("images/font.ttf", 100).render("You Lose", True, "#d7fcd4")
+        MENU_RECT = MENU_TEXT.get_rect(center=(465, 100))
+
+        PLAY_BUTTON = Button(image=pygame.image.load("images/PlayAgain Rect.png"), pos=(465, 250), 
+                            text_input="PLAY AGAIN", font=pygame.font.Font("images/font.ttf", 75), base_color="#d7fcd4", hovering_color="White", screen = screen)
+        OPTIONS_BUTTON = Button(image=pygame.image.load("images/Continue Rect.png"), pos=(465, 400), 
+                            text_input="MAIN MENU", font=pygame.font.Font("images/font.ttf", 75), base_color="#d7fcd4", hovering_color="White", screen = screen)
+        QUIT_BUTTON = Button(image=pygame.image.load("images/Quit Rect.png"), pos=(465, 550), 
+                            text_input="QUIT", font=pygame.font.Font("images/font.ttf", 75), base_color="#d7fcd4", hovering_color="White", screen = screen)
+        screen.blit(BG, (0, 0))
+        
+        viewChanged = False
+    
+    while view == "loss":
+            
+            for event in pygame.event.get():
+                if event.type == pygame.QUIT:
+                    pygame.quit()
+                    sys.exit()
+                if event.type == pygame.MOUSEMOTION:
+                    for button in [PLAY_BUTTON, OPTIONS_BUTTON, QUIT_BUTTON]:
+                        button.changeColor(event.pos)
+                        button.update()
+                if event.type == pygame.MOUSEBUTTONDOWN:
+                    if PLAY_BUTTON.checkForInput(event.pos):
+                        view = "game"
+                        viewChanged = True
+                    if OPTIONS_BUTTON.checkForInput(event.pos):
+                        view = "main menu"
+                        viewChanged = True
+                    if QUIT_BUTTON.checkForInput(event.pos):
+                        pygame.quit()
+                        sys.exit()
+            
+            screen.blit(MENU_TEXT, MENU_RECT)
+            pygame.display.update()
+                
          
-main_menu()
 
 
 
