@@ -2,13 +2,10 @@ import pygame, pymunk, math, pymunk.pygame_util, random, sys
 from pymunk import Vec2d 
 from Ball import*
 from Hud import*
-# ~ from Hub import*
 from Map import*
 from Bumper import*
 from Flipper import*
-#spoon
 from Launcher import*
-
 from Button import Button
 
 
