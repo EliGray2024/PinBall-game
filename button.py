@@ -17,6 +17,7 @@ class Button():
         self.text_rect = self.text.get_rect(center=(self.x_pos, self.y_pos))
         self.screen = screen
         self.update()
+        self.sound = pygame.mixer.Sound("Sounds/button.wav")
 
     def update(self):
         if self.image is not None:
@@ -25,7 +26,9 @@ class Button():
 
     def checkForInput(self, position):
         if position[0] in range(self.rect.left, self.rect.right) and position[1] in range(self.rect.top, self.rect.bottom):
+            self.sound.play()
             return True
+            
         return False
 
     def changeColor(self, position):

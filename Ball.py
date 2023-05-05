@@ -2,7 +2,7 @@ import pygame, pymunk, math, pymunk.pygame_util
 from pymunk import Vec2d 
 
 class Ball():
-    def __init__(self, space, pos, radius = 30):
+    def __init__(self, space, pos, radius = 29):
         self.kind = "ball"
         self.radius = radius
         self.image = pygame.image.load("images/ball.png")

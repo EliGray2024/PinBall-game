@@ -7,6 +7,8 @@ from Bumper import*
 from Flipper import*
 from Launcher import*
 from Button import Button
+from pygame import mixer
+
 
 
 pygame.mixer.pre_init(44100, -16, 1, 512)
@@ -18,6 +20,11 @@ Flipper.collision_type = 3
 Bumper.collision_type = 4
 
 Launcher.collision_type = 5
+
+mixer.music.load("Sounds/background.ogg")
+mixer.music.play(-1)
+
+
 
 size = (930,1000)
 screen = pygame.display.set_mode(size)
@@ -76,7 +83,9 @@ while True:
                             text_input="PLAY", font=pygame.font.Font("images/font.ttf", 75), base_color="#d7fcd4", hovering_color="White", screen = screen)
         OPTIONS_BUTTON = Button(image=pygame.image.load("images/Options Rect.png"), pos=(465, 400), 
                             text_input="OPTIONS", font=pygame.font.Font("images/font.ttf", 75), base_color="#d7fcd4", hovering_color="White", screen = screen)
-        QUIT_BUTTON = Button(image=pygame.image.load("images/Quit Rect.png"), pos=(465, 550), 
+        CREDITS_BUTTON = Button(image=pygame.image.load("images/Options Rect.png"), pos=(465, 550), 
+                            text_input="CREDITS", font=pygame.font.Font("images/font.ttf", 75), base_color="#d7fcd4", hovering_color="White", screen = screen)
+        QUIT_BUTTON = Button(image=pygame.image.load("images/Quit Rect.png"), pos=(465, 700), 
                             text_input="QUIT", font=pygame.font.Font("images/font.ttf", 75), base_color="#d7fcd4", hovering_color="White", screen = screen)
         screen.blit(BG, (0, 0))
         
@@ -90,7 +99,7 @@ while True:
                 pygame.quit()
                 sys.exit()
             if event.type == pygame.MOUSEMOTION:
-                for button in [PLAY_BUTTON, OPTIONS_BUTTON, QUIT_BUTTON]:
+                for button in [PLAY_BUTTON, OPTIONS_BUTTON, CREDITS_BUTTON, QUIT_BUTTON]:
                     button.changeColor(event.pos)
                     button.update()
             if event.type == pygame.MOUSEBUTTONDOWN:
@@ -105,8 +114,12 @@ while True:
                         ballcount = 0
                         
                     viewChanged = True
+                if CREDITS_BUTTON.checkForInput(event.pos):
+                    view = "credit"
+                    viewChanged = True
                 if OPTIONS_BUTTON.checkForInput(event.pos):
-                    pass
+                    view = "options"
+                    viewChanged = True
                 if QUIT_BUTTON.checkForInput(event.pos):
                     pygame.quit()
                     sys.exit()
@@ -173,7 +186,99 @@ while True:
         pygame.display.update()
         clock.tick(FPS)
         space.step(1/FPS)
+    if view == "options" and viewChanged:
+        BG = pygame.image.load("images/Background.png")
+
+        MENU_TEXT = pygame.font.Font("images/font.ttf", 100).render("OPTIONS", True, "#d7fcd4")
+        MENU_RECT = MENU_TEXT.get_rect(center=(465, 100))
+        
+        DESC_TEXT = pygame.font.Font("images/font.ttf", 20).render("", True, "#d7fcd4")
+        DESC_RECT = DESC_TEXT.get_rect(center=(465, 300))
+       
     
+        
+        PLAY_BUTTON = Button(image=pygame.image.load("images/Play Rect.png"), pos=(465, 600), 
+                            text_input="BACK", font=pygame.font.Font("images/font.ttf", 75), base_color="#d7fcd4", hovering_color="White", screen = screen)
+        QUIT_BUTTON = Button(image=pygame.image.load("images/Quit Rect.png"), pos=(465, 750), 
+                            text_input="QUIT", font=pygame.font.Font("images/font.ttf", 75), base_color="#d7fcd4", hovering_color="White", screen = screen)
+        screen.blit(BG, (0, 0))
+        
+        viewChanged = False
+        
+    while view == "options":
+            
+            for event in pygame.event.get():
+                if event.type == pygame.QUIT:
+                    pygame.quit()
+                    sys.exit()
+                if event.type == pygame.MOUSEMOTION:
+                    for button in [PLAY_BUTTON, QUIT_BUTTON]:
+                        button.changeColor(event.pos)
+                        button.update()
+                if event.type == pygame.MOUSEBUTTONDOWN:
+                    if PLAY_BUTTON.checkForInput(event.pos):
+                        view = "main menu"
+                        viewChanged = True
+                    if QUIT_BUTTON.checkForInput(event.pos):
+                        pygame.quit()
+                        sys.exit()
+                if event.type == pygame.KEYDOWN:
+                    if event.key == pygame.K_BACKSPACE or event.key == pygame.K_ESCAPE:
+                        view = "main menu"
+                        viewChanged = True
+                        
+            screen.blit(MENU_TEXT, MENU_RECT)
+            screen.blit(DESC_TEXT, DESC_RECT)
+            pygame.display.update()
+         
+    if view == "credit" and viewChanged:
+        BG = pygame.image.load("images/Background.png")
+
+        MENU_TEXT = pygame.font.Font("images/font.ttf", 100).render("CREDITS", True, "#d7fcd4")
+        MENU_RECT = MENU_TEXT.get_rect(center=(465, 100))
+        
+        DESC_TEXT = pygame.font.Font("images/font.ttf", 20).render("By: Eli Gray " "And " "Christopher Spooner", True, "#d7fcd4")
+        DESC_RECT = DESC_TEXT.get_rect(center=(465, 300))
+       
+        DESC_TEXT2 = pygame.font.Font("images/font.ttf", 20).render("Music By: KYOTO", True, "#d7fcd4")
+        DESC_RECT2 = DESC_TEXT2.get_rect(center=(465, 350))
+    
+        
+        PLAY_BUTTON = Button(image=pygame.image.load("images/Play Rect.png"), pos=(465, 600), 
+                            text_input="BACK", font=pygame.font.Font("images/font.ttf", 75), base_color="#d7fcd4", hovering_color="White", screen = screen)
+        QUIT_BUTTON = Button(image=pygame.image.load("images/Quit Rect.png"), pos=(465, 750), 
+                            text_input="QUIT", font=pygame.font.Font("images/font.ttf", 75), base_color="#d7fcd4", hovering_color="White", screen = screen)
+        screen.blit(BG, (0, 0))
+        
+        viewChanged = False
+        
+    while view == "credit":
+            
+            for event in pygame.event.get():
+                if event.type == pygame.QUIT:
+                    pygame.quit()
+                    sys.exit()
+                if event.type == pygame.MOUSEMOTION:
+                    for button in [PLAY_BUTTON, QUIT_BUTTON]:
+                        button.changeColor(event.pos)
+                        button.update()
+                if event.type == pygame.MOUSEBUTTONDOWN:
+                    if PLAY_BUTTON.checkForInput(event.pos):
+                        view = "main menu"
+                        viewChanged = True
+                    if QUIT_BUTTON.checkForInput(event.pos):
+                        pygame.quit()
+                        sys.exit()
+                if event.type == pygame.KEYDOWN:
+                    if event.key == pygame.K_BACKSPACE or event.key == pygame.K_ESCAPE:
+                        view = "main menu"
+                        viewChanged = True
+                        
+            screen.blit(MENU_TEXT, MENU_RECT)
+            screen.blit(DESC_TEXT, DESC_RECT)
+            screen.blit(DESC_TEXT2, DESC_RECT2)
+            pygame.display.update()
+         
     if view == "paused" and viewChanged:
         MENU_MOUSE_POS = pygame.mouse.get_pos()
 
