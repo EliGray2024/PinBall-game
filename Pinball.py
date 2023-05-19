@@ -240,8 +240,11 @@ while True:
         DESC_TEXT = pygame.font.Font("images/font.ttf", 20).render("By: Eli Gray " "And " "Christopher Spooner", True, "#d7fcd4")
         DESC_RECT = DESC_TEXT.get_rect(center=(465, 300))
        
-        DESC_TEXT2 = pygame.font.Font("images/font.ttf", 20).render("Music By: KYOTO", True, "#d7fcd4")
+        DESC_TEXT2 = pygame.font.Font("images/font.ttf", 20).render("Music: KYOTO - Japanese Lofi hip hop", True, "#d7fcd4")
         DESC_RECT2 = DESC_TEXT2.get_rect(center=(465, 350))
+        
+        DESC_TEXT3 = pygame.font.Font("images/font.ttf", 20).render("By: https://www.youtube.com/@slashlofi", True, "#d7fcd4")
+        DESC_RECT3 = DESC_TEXT2.get_rect(center=(465, 400))
     
         
         PLAY_BUTTON = Button(image=pygame.image.load("images/Play Rect.png"), pos=(465, 600), 
@@ -277,6 +280,7 @@ while True:
             screen.blit(MENU_TEXT, MENU_RECT)
             screen.blit(DESC_TEXT, DESC_RECT)
             screen.blit(DESC_TEXT2, DESC_RECT2)
+            screen.blit(DESC_TEXT3, DESC_RECT3)
             pygame.display.update()
          
     if view == "paused" and viewChanged:
@@ -352,13 +356,13 @@ while True:
                     if PLAY_BUTTON.checkForInput(event.pos):
                         view = "game"
                         viewChanged = True
+                        lives += 3
                     if OPTIONS_BUTTON.checkForInput(event.pos):
                         view = "main menu"
                         viewChanged = True
                     if QUIT_BUTTON.checkForInput(event.pos):
                         pygame.quit()
                         sys.exit()
-            
             screen.blit(MENU_TEXT, MENU_RECT)
             pygame.display.update()
                 
