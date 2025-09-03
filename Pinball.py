@@ -26,7 +26,7 @@ mixer.music.play(-1)
 
 
 
-size = (930,1000)
+size = (930,850)
 screen = pygame.display.set_mode(size)
 draw_options = pymunk.pygame_util.DrawOptions(screen)
 #https://www.vpforums.org/Tutorials/Sounds/SndLib1.html 
